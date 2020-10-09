@@ -1,0 +1,113 @@
+@import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@300&display=swap');
+
+*{
+  margin: 0;
+  padding: 0;
+}
+body {
+  background-color: lightcyan;
+  font-family: 'Inconsolata', monospace;
+}
+#game{
+  border: 1px solid gray;
+  height: 400px;
+  width: 640px;
+  margin: auto;
+  background-color: white;
+  overflow: hidden;
+  position: relative;
+}
+
+.hidden{
+  display: none;
+}
+#sky{
+  height: 400px;
+  width: 640px;
+  background: url("../img/sky_sun.png") no-repeat center;
+  background-size: 100% 100%;
+}
+
+.cloud {
+  width: 150px;
+  height: 75px;
+  position: absolute;
+  left: 640px;
+}
+
+.coin, .coins, .fuel, .fuels {
+  height: auto;
+  position: absolute;
+  left: 640px;
+}
+.coin{
+  width: 20px;
+}
+.coins{
+  width: 30px;
+}
+.fuel{
+  width: 15px;
+}
+.fuels{
+  width: 30px;
+}
+
+
+#plane{
+  width: 15%;
+  height: 12%;
+  position: absolute;
+  top: 130px;
+  z-index: 80;
+  -webkit-transition:all 10ms ease;
+  -moz-transition:   all 10ms ease;
+  -ms-transition:    all 10ms ease;
+  -o-transition:     all 10ms ease;
+  transition:        all 10ms ease;
+}
+#score-card{
+  height: 16px;
+  width: 30px;
+  position: absolute;
+  background-color: lightgray;
+  border: 1px solid gray;
+  top: 10px;
+  left: 30px;
+  font-size: 15px;
+  padding: 2px;
+  text-align: center;
+  font-weight: bold;
+}
+#fuel-bar{
+  height: 10px;
+  width: 100px;
+  border: 1px solid black;
+  position: absolute;
+  top: 10px;
+  right: 30px;
+  background: -webkit-linear-gradient(left, #efe3af 75%,#ffffff 75%);
+  background:    -moz-linear-gradient(left, #efe3af 75%, #ffffff 75%);
+  background:     -ms-linear-gradient(left, #efe3af 75%,#ffffff 75%);
+  background:      -o-linear-gradient(left, #efe3af 75%,#ffffff 75%);
+  background:         linear-gradient(to right, #efe3af 75%,#ffffff 75%);
+}
+#ground{
+  height: 400px;
+  width: 640px;
+  position: absolute;
+  z-index: 30;
+  background: url("../img/ground_1.png") repeat-x left center;
+  background-size: 100% 100%;
+  bottom: -25px;
+  animation: bg-move 8s linear infinite;
+}
+@keyframes move {
+  from {transform: translate(100%);}
+  to   {transform: translate(  0%);}
+}
+@keyframes bg-move {
+  from {background-position: 640px center;}
+  to   {background-position: 0     center;}
+}
+
