@@ -7,6 +7,14 @@
 body {
   background-color: lightcyan;
   font-family: 'Inconsolata', monospace;
+  -webkit-touch-callout:  none; /* iOS Safari */
+  -webkit-user-select:    none; /* Safari */
+  -khtml-user-select:     none; /* Konqueror HTML */
+  -moz-user-select:       none; /* Old versions of Firefox */
+  -ms-user-select:        none; /* Internet Explorer/Edge */
+  user-select:            none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
+
 }
 #game{
   border: 1px solid gray;
@@ -69,6 +77,12 @@ body {
   -o-transition:     all 10ms ease;
   transition:        all 10ms ease;
 }
+#plane.up{
+  transform: rotate(-10deg);
+}
+#plane.down{
+  transform: rotate(10deg);
+}
 #score-card{
   height: 16px;
   width: 30px;
@@ -81,6 +95,7 @@ body {
   padding: 2px;
   text-align: center;
   font-weight: bold;
+  z-index: 200;
 }
 #fuel-bar{
   height: 10px;

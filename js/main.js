@@ -1,7 +1,7 @@
 let isUpKeyDown = false;
 let gravityPull = 2;
 let gravityIncreaseRate = 0;
-let maxFuel = 3000;
+let maxFuel = 5000;
 let fuel = maxFuel;
 let groundLimit = 300;
 let skyLimit = 20;
@@ -10,24 +10,24 @@ let fuelBurnRate = 1;
 let fuelUpBurnRate = 3;
 
 let bulkGoldProbability = 20;
-let fuelProbability = 5;
+let fuelProbability = 10;
 let bulkFuelProbability = 1;
-let magnetProbability = 5;
+let magnetProbability = 2;
 
 coinValue = 1;
 bulkCoinValue = 5;
-fuelValue = 500;
-bulkFuelValue = 1500;
+fuelValue = 800;
+bulkFuelValue = 2500;
 
 let pathPosition = 200;
 let pathDirectionLength = 1;
 let pathDirection = -1; // 1 is down and -1 is up. and zero is straight
-let pathPositionDisplacement = 30;
-let pathStackDistance = 35;
+let pathPositionDisplacement = 25;
+let pathStackDistance = 45;
 
 let score = 0;
 const stackLimit = 3;
-const haveStackProbability = 20; // percent
+const haveStackProbability = 30; // percent
 
 let bonusRegion;
 
@@ -81,7 +81,7 @@ const addCoinToPath = function(){
 
   const gameBoard = $('#game');
 
-  const img = getCoinFuelOnProbability();
+  const img = getCoinFuelOnProbability(true);
 
   // If path incremental or decremental direction is more
   // then Direction Length only then change the direction
@@ -126,21 +126,20 @@ const addCoinToPath = function(){
   collectCoins();
 };
 
-function getCoinFuelOnProbability(){
+function getCoinFuelOnProbability(isPath){
   const addBulkGoldOnPath = (Math.random() * 100) < bulkGoldProbability;
   const addFuelWithPath = (Math.random() * 100) < fuelProbability;
   const addBulkFuelWithPath = (Math.random() * 100) < bulkFuelProbability;
   const magnetWithPath = (Math.random() * 100) < magnetProbability;
-
   let img;
 
-  if(addBulkGoldOnPath){
+  if( addBulkGoldOnPath ){
     img = $('.hidden .coins:first').clone();
-  } else if( addFuelWithPath ){
+  } else if( addFuelWithPath && !isPath){
     img = $('.hidden .fuel:first').clone();
-  } else if( magnetWithPath ){
+  } else if( magnetWithPath && !isPath ){
     img = $('.hidden .magnet:first').clone();
-  } else if( addBulkFuelWithPath ){
+  } else if( addBulkFuelWithPath && !isPath ){
     img = $('.hidden .fuels:first').clone();
   } else {
     img = $('.hidden .coin:first').clone();
@@ -208,10 +207,15 @@ const gravity = function(){
   if(fuel > 0 && isUpKeyDown && top > skyLimit){
     top -= 2;
     fuel -= fuelUpBurnRate;
+    plane.addClass('up').removeClass('down');
   } else {
     fuel -= fuelBurnRate;
-    if(top <= groundLimit)
+    plane.addClass('down').removeClass('up');
+    if(top <= groundLimit){
       top += gravityPull;
+    } else {
+      plane.removeClass('down');
+    }
   }
   setFill(fuelBar, Math.floor((fuel/maxFuel) * 100), true );
   setScoreCard();
@@ -229,7 +233,7 @@ $(document).ready(function(){
   setInterval(addCloud, 6000);
   addCloud();
 
-  setInterval(addCoinToPath, 700);
+  setInterval(addCoinToPath, 500);
   addCoinToPath();
 
   $('body').on("mousedown touchstart", function(e){
