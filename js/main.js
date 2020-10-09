@@ -12,6 +12,7 @@ let fuelUpBurnRate = 3;
 let bulkGoldProbability = 20;
 let fuelProbability = 5;
 let bulkFuelProbability = 1;
+let magnetProbability = 5;
 
 coinValue = 1;
 bulkCoinValue = 5;
@@ -129,6 +130,7 @@ function getCoinFuelOnProbability(){
   const addBulkGoldOnPath = (Math.random() * 100) < bulkGoldProbability;
   const addFuelWithPath = (Math.random() * 100) < fuelProbability;
   const addBulkFuelWithPath = (Math.random() * 100) < bulkFuelProbability;
+  const magnetWithPath = (Math.random() * 100) < magnetProbability;
 
   let img;
 
@@ -136,6 +138,8 @@ function getCoinFuelOnProbability(){
     img = $('.hidden .coins:first').clone();
   } else if( addFuelWithPath ){
     img = $('.hidden .fuel:first').clone();
+  } else if( magnetWithPath ){
+    img = $('.hidden .magnet:first').clone();
   } else if( addBulkFuelWithPath ){
     img = $('.hidden .fuels:first').clone();
   } else {
@@ -181,13 +185,18 @@ function addCoinsStack(){
 
 
 function collectCoins() {
-  let aboutToCollideElements = $('#game').find(".coin, .coins, .fuel, .fuels").filter(function(){
+  let aboutToCollideElements = $('#game').find(".coin, .coins, .fuel, .fuels, .magnet").filter(function(){
     return $(this).position().left <= 100 && $(this).position().left > 0;
   });
 
   aboutToCollideElements.each(function(i, ele){
+    ele = $(ele);
     if( collidesWithPlane(ele) ){
-      animateTowardsPlane(ele);
+      if(ele.is('.magnet')){
+        magnetCaptured()
+      } else {
+        animateTowardsPlane(ele);
+      }
     }
   });
 }
@@ -322,5 +331,11 @@ const calculateScore = function (ele){
   }
   if (fuel > maxFuel) fuel = maxFuel;
 };
+
+const magnetCaptured = function(){
+  $('#game').find('.coin, .coins, .fuels, .fuel, .magnet').stop().each(function(i, ele){
+    animateTowardsPlane(ele);
+  });
+}
 
 
