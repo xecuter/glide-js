@@ -116,11 +116,6 @@ const addCoinToPath = function(){
 
   }
 
-  if(coinArray.length > 1){
-    console.log( coinArray );
-
-  }
-
   gameBoard.append(coinArray);
 
   $.each(coinArray, function(i, ele){
@@ -228,15 +223,11 @@ $(document).ready(function(){
   setInterval(addCoinToPath, 700);
   addCoinToPath();
 
-  $('body').on("keydown", function(e){
-    if (e.keyCode === 38) {
-      isUpKeyDown = true;
-      gravityIncreaseRate = 0;
-    }
-  }).on("keyup", function(e){
-    if(e.keyCode === 38){
-      isUpKeyDown = false;
-    }
+  $('body').on("mousedown touchstart", function(e){
+    isUpKeyDown = true;
+    gravityIncreaseRate = 0;
+  }).on("mouseup touchend", function(e){
+    isUpKeyDown = false;
   });
   loop = setInterval(gravity, 20);
   gravity();
