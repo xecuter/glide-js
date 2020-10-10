@@ -372,7 +372,7 @@ let animateTowardsPlane = function(ele) {
   ele.animate({
     top: destinationPosition.top,
     left: destinationPosition.left
-  }, 800, 'swing', function (){
+  }, 400, 'swing', function (){
     let e = $(this);
     calculateScore(ele);
   });
