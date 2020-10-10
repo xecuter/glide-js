@@ -215,7 +215,8 @@ function showNewGamePopup() {
 
 // 0 means going straight
 // -1/1 partial up/down
-// -2/2 full up/down
+// -2/2 full up/down --> it will depend on this variable.
+const planeGoUpDownLimit = 5;
 // minus means plane is going up;
 let planeDirection = 0;
 let incrementalInterval = 1;
@@ -224,7 +225,7 @@ const planeFlight = function(){
   let top = parseInt(plane.css('top'), 10);
   if( fuel > 0 && isUpKeyDown ){
     fuel -= fuelUpBurnRate;
-    if (planeDirection !== -3){
+    if (planeDirection !== -(planeGoUpDownLimit)){
       if(++incrementalIntervalCount === incrementalInterval){
         planeDirection-=planeRotationFactor;
         incrementalIntervalCount = 0;
@@ -236,7 +237,7 @@ const planeFlight = function(){
       // The plane is on the ground
       if(planeDirection !== 0){planeDirection-=planeRotationFactor}
     } else {
-      if (planeDirection !== 3) {
+      if (planeDirection !== planeGoUpDownLimit) {
         if (++incrementalIntervalCount === incrementalInterval) {
           planeDirection += planeRotationFactor;
           incrementalIntervalCount = 0;
@@ -245,11 +246,16 @@ const planeFlight = function(){
     }
   }
   top += planeDirection;
-  plane.removeClass('direction-3 direction3 direction-2 direction2 direction-1 direction1 direction0')
-    .addClass("direction" + Math.floor(planeDirection));
-  plane.css('top', top);
+  let degrees = Math.floor(planeDirection) * 5;
+  plane.css({
+    'top': top,
+    'transform': 'rotate('+ degrees +'deg)'
+  });
 }
-
+jQuery.fn.rotate = function(degrees) {
+  $(this).css({'transform' : 'rotate('+ degrees +'deg)'});
+  return $(this);
+};
 const gameLoop = function(){
   planeFlight();
   scrollToCenter($('#screen'), plane);
