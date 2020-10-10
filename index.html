@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="utf-8">
-  <title></title>
+  <title>Glide - JS Game</title>
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -16,19 +16,20 @@
   <link rel="apple-touch-icon" href="icon.png">
   <!-- Place favicon.ico in the root directory -->
   <link rel="stylesheet" href="css/main.css?3">
-
+  <link rel="stylesheet" href="css/bootstrap.css">
   <meta name="theme-color" content="#fafafa">
 </head>
 
 <body>
-  <div id="game">
+  <div id="screen">
     <div id="fuel-bar"></div>
     <div id="score-card"></div>
-    <img id="plane" src="img/plane1.png" alt="plane" >
-    <div id="sky"></div>
-    <div id="ground"></div>
+    <div id="game">
+      <img id="plane" src="img/plane1.png" alt="plane" >
+      <div id="sky"></div>
+      <div id="ground"></div>
+    </div>
   </div>
-
   <div class="hidden">
     <img src="" alt="cloud image" class="cloud" />
     <img src="img/coin1.png" alt="coin" class="coin"  />
@@ -37,8 +38,25 @@
     <img src="img/fuel2.png" alt="bulk fuel" class="fuels" />
     <img src="img/magnet1.png" alt="magnet" class="magnet" />
   </div>
-  <script src="js/jquery.min.js"></script>
-  <script src="js/main.js"></script>
+  <div class="modal fade" id="game-over-dlg" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Game Over</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>Your score is <span class="font-weight-bold" id="modal-score"></span></p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" onclick="window.location.reload()">Restart</button>
+          <!--<button type="button" class="btn btn-secondary" data-dismiss="modal">Go Home</button>-->
+        </div>
+      </div>
+    </div>
+  </div>
 </body>
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-180231501-1"></script>
@@ -49,4 +67,6 @@
 
   gtag('config', 'UA-180231501-1');
 </script>
+<script src="js/jquery.min.js"></script>
+<script src="js/main.js"></script>
 </html>
