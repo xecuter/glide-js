@@ -59,19 +59,19 @@ body {
   z-index: 50;
 }
 .coin{
-  width: 2.5%;
+  width: 15px;
 }
 .coins{
-  width: 3%;
+  width: 20px;
 }
 .fuel{
-  width: 2%;
+  width: 15px;
 }
 .fuels{
-  width: 2.5%;
+  width: 20px;
 }
 .magnet{
-  width: 3%;
+  width: 20px;
 }
 #plane{
   width: 50px;
