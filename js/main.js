@@ -374,9 +374,8 @@ let animateTowardsPlane = function(ele) {
     left: destinationPosition.left
   }, 800, 'swing', function (){
     let e = $(this);
-    e.remove();
+    calculateScore(ele);
   });
-  calculateScore(ele);
 }
 
 const calculateScore = function (ele){
@@ -390,17 +389,21 @@ const calculateScore = function (ele){
     fuel += bulkFuelValue;
   }
   if (fuel > maxFuel) fuel = maxFuel;
+  ele.remove();
   setScoreCard();
 };
 
 const magnetCaptured = function(){
   let position = plane.position();
   game.find('.coin, .coins, .fuels, .fuel, .magnet').stop().each(function(i, ele){
-
-    $(ele).animate({
+    ele = $(ele);
+    if(ele.is('.fuel, .fuels, .magnet')){
+      calculateScore(ele);
+    }
+    ele.animate({
       top: position.top,
       left: position.left
-    }, 400, 'linear', function(){
+    }, 100, 'linear', function(){
       animateTowardsPlane(this);
     });
   });
