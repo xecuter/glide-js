@@ -40,6 +40,7 @@ body {
   width: 100%;
   background: url("../img/sky_sun2.png") no-repeat center;
   background-size: 100% 130%;
+  opacity:0.6;
 }
 .cloud {
   width: 150px;
@@ -51,6 +52,7 @@ body {
   height: auto;
   position: absolute;
   left: 640px;
+  z-index: 50;
 }
 .coin{
   width: 2.5%;
@@ -68,8 +70,8 @@ body {
   width: 3%;
 }
 #plane{
-  width: 70px;
-  height: 50px;
+  width: 50px;
+  height: 30px;
   position: absolute;
   top: 500px;
   left: 60px;
@@ -80,20 +82,26 @@ body {
   -o-transition:     all 10ms ease;
   transition:        all 10ms ease;
 }
+#plane.direction-3{
+  transform: rotate(-20deg);
+}
 #plane.direction-2{
-  transform: rotate(-15deg);
+  transform: rotate(-14deg);
 }
 #plane.direction-1{
-  transform: rotate(-8deg);
+  transform: rotate(-7deg);
 }
 #plane.direction0{
   transform: rotate(0deg);
 }
 #plane.direction1{
-  transform: rotate(8deg);
+  transform: rotate(7deg);
 }
 #plane.direction2{
-  transform: rotate(15deg);
+  transform: rotate(14deg);
+}
+#plane.direction3{
+  transform: rotate(20deg);
 }
 
 #score-card{
@@ -132,14 +140,35 @@ body {
   background: url("../img/ground_1.png") repeat-x left center;
   background-size: 100% 100%;
   bottom: -25px;
-  animation: bg-move 8s linear infinite;
+  animation: bg-move-ground 3s linear infinite;
+}
+#bg1{
+  height: 100px;
+  width: 640px;
+  position: absolute;
+  z-index: 29;
+  background: url("../img/bg1.png") repeat-x left center;
+  background-size: 100% 100%;
+  bottom: 20px;
+  animation: bg-move-ground 8s linear infinite;
+  opacity:0.6;
+}
+#bg2{
+  height: 500px;
+  width: 640px;
+  position: absolute;
+  z-index: 23;
+  background: url("../img/bg2.png") repeat-x left center;
+  background-size: 100% 100%;
+  bottom: 40px;
+  animation: bg-move-ground 12s linear infinite;
+  opacity:0.6;
 }
 @keyframes move {
   from {transform: translate(100%);}
   to   {transform: translate(  0%);}
 }
-@keyframes bg-move {
+@keyframes bg-move-ground {
   from {background-position: 640px center;}
   to   {background-position: 0     center;}
 }
-

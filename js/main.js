@@ -2,23 +2,26 @@ let isUpKeyDown = false;
 let gravityPull = 2;
 let gravityIncreaseRate = 0;
 let planeRotationFactor = 0.5;
-let maxFuel = 5000;
+let maxFuel = 2000;
 let fuel = maxFuel;
-let groundLimit = 300;
+let groundLimit; // will init in main;
 let skyLimit = 20;
 
 let fuelBurnRate = 1;
-let fuelUpBurnRate = 3;
+let fuelUpBurnRate = 4;
 
 let bulkGoldProbability = 20;
-let fuelProbability = 10;
+let fuelProbability = 5;
 let bulkFuelProbability = 1;
 let magnetProbability = 2;
 
-coinValue = 1;
-bulkCoinValue = 5;
-fuelValue = 800;
-bulkFuelValue = 2500;
+let coinValue = 1;
+let bulkCoinValue = 5;
+let fuelValue = 200;
+let bulkFuelValue = 600;
+
+let coinSpeed = 3000;
+let coinFrequency = 200;
 
 let pathPosition = 500;
 let pathDirectionLength = 1;
@@ -73,7 +76,7 @@ function getRandomInt(max) {
 let directionCount = 0;
 
 // direction can only be 1, -1, 0
-function setDirection(direction){
+function setCoinPathDirection(direction){
   if (pathDirection !== direction){
     directionCount = 0
   }
@@ -91,11 +94,11 @@ const addCoinToPath = function(){
     // change the path
     const randInt = getRandomInt(3);
     if(randInt === 1) {
-      setDirection(1);
+      setCoinPathDirection(1);
     } else if (randInt === 2) {
-      setDirection(-1);
+      setCoinPathDirection(-1);
     } else {
-      setDirection(0);
+      setCoinPathDirection(0);
     }
   }
   directionCount++;
@@ -118,14 +121,11 @@ const addCoinToPath = function(){
     coinArray = coinArray.concat( coinsStack.down );
 
   }
-
   gameBoard.append(coinArray);
 
   $.each(coinArray, function(i, ele){
-    $(ele).animate({left: '-=850'},8000, 'linear', function(){this.remove()});
+    $(ele).animate({left: '-=850'}, coinSpeed, 'linear', function(){this.remove()});
   });
-
-  collectCoins();
 };
 
 function getCoinFuelOnProbability(isPath){
@@ -188,7 +188,7 @@ function addCoinsStack(){
 function collectCoins() {
   let planeLeft = plane.position().left;
   let planeWidth = plane.outerWidth();
-  let aboutToCollideElements = game.find(".coin, .coins, .fuel, .fuels, .magnet").filter(function(){
+  let aboutToCollideElements = game.find(".coin, .coins, .fuel, .fuels, .magnet").not('.collected').filter(function(){
     return $(this).position().left > planeLeft && $(this).position().left <= (planeLeft + planeWidth) ;
   });
 
@@ -208,7 +208,9 @@ function setScoreCard(){
 }
 
 function showNewGamePopup() {
-  $('#game-over-dlg').modal()
+  const dlg = $('#game-over-dlg');
+  dlg.find('#modal-score').text(score);
+  dlg.modal();
 }
 
 // 0 means going straight
@@ -216,31 +218,44 @@ function showNewGamePopup() {
 // -2/2 full up/down
 // minus means plane is going up;
 let planeDirection = 0;
+let incrementalInterval = 1;
+let incrementalIntervalCount = 0;
 const planeFlight = function(){
   let top = parseInt(plane.css('top'), 10);
   if( fuel > 0 && isUpKeyDown ){
     fuel -= fuelUpBurnRate;
-    if (planeDirection !== -2){planeDirection-=planeRotationFactor}
+    if (planeDirection !== -3){
+      if(++incrementalIntervalCount === incrementalInterval){
+        planeDirection-=planeRotationFactor;
+        incrementalIntervalCount = 0;
+      }
+    }
   } else {
     fuel -= fuelBurnRate;
     if(top >= groundLimit){
+      // The plane is on the ground
       if(planeDirection !== 0){planeDirection-=planeRotationFactor}
-    } else{
-      if (planeDirection !== 2){planeDirection+=planeRotationFactor}
+    } else {
+      if (planeDirection !== 3) {
+        if (++incrementalIntervalCount === incrementalInterval) {
+          planeDirection += planeRotationFactor;
+          incrementalIntervalCount = 0;
+        }
+      }
     }
   }
   top += planeDirection;
-  plane.removeClass('direction-2 direction2 direction-1 direction1 direction0')
+  plane.removeClass('direction-3 direction3 direction-2 direction2 direction-1 direction1 direction0')
     .addClass("direction" + Math.floor(planeDirection));
   plane.css('top', top);
-};
+}
 
 const gameLoop = function(){
   planeFlight();
   scrollToCenter($('#screen'), plane);
   setFill(fuelBar, Math.floor((fuel/maxFuel) * 100), true );
-  setScoreCard();
-  if(fuel <= 0 && top >= groundLimit){
+  collectCoins();
+  if(fuel <= 0 && plane.position().top >= groundLimit){
     showNewGamePopup();
     clearInterval(loop);
   }
@@ -251,12 +266,12 @@ $(document).ready(function(){
   game = $('#game');
   fuelBar = $('#fuel-bar');
   scoreCard = $('#score-card');
-  groundLimit = (game.outerHeight() - 100);
+  groundLimit = (game.outerHeight() - 75);
 
   setInterval(addCloud, 6000);
   addCloud();
 
-  setInterval(addCoinToPath, 500);
+  setInterval(addCoinToPath, coinFrequency);
   addCoinToPath();
 
   $('body').on("mousedown touchstart", function(e){
@@ -324,7 +339,7 @@ let animateTowardsPlane = function(ele) {
   if(!ele){
     return false;
   }
-  ele = $(ele);
+  ele = $(ele).addClass('collected');
   ele.stop(true);
   let destinationPosition = scoreCard.position();
   if(ele.is('.fuel, .fuels')){
@@ -352,6 +367,7 @@ const calculateScore = function (ele){
     fuel += bulkFuelValue;
   }
   if (fuel > maxFuel) fuel = maxFuel;
+  setScoreCard();
 };
 
 const magnetCaptured = function(){
@@ -366,7 +382,6 @@ const scrollToCenter = function(container, element){
   $parentDiv.animate({
     scrollTop: ($innerItem.position().top - ($parentDiv.innerHeight()/2 - $innerItem.innerHeight()/2))
   }, 30, 'linear');
-  //$parentDiv.scrollTop($innerItem.position().top - ($parentDiv.innerHeight()/2 - $innerItem.innerHeight()/2));
 }
 
 
