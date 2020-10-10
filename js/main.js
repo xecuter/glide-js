@@ -33,7 +33,11 @@ let score = 0;
 const stackLimit = 3;
 const haveStackProbability = 30; // percent
 
-let bonusRegion;
+
+// Bonus round will appear % Probability
+const bonusRegionProbability = 2;
+const bonusRegionLength = 5;
+let isBonusRegion = false;
 
 //Constant Element
 let plane;
@@ -88,6 +92,19 @@ const addCoinToPath = function(){
 
   const img = getCoinFuelOnProbability(true);
 
+  // Start / Stop Bonus Region
+  if(!isBonusRegion){
+    if( (Math.random() * 100) < bonusRegionProbability ){
+      // Start bonus region
+      isBonusRegion = true;
+      bonusRegionCount = 0;
+    }
+  } else {
+    if(++bonusRegionCount === bonusRegionLength){
+      isBonusRegion = false;
+    }
+  }
+
   // If path incremental or decremental direction is more
   // then Direction Length only then change the direction
   if( directionCount > pathDirectionLength){
@@ -115,7 +132,7 @@ const addCoinToPath = function(){
 
   let coinArray = [];
   coinArray.push( img );
-  if( (Math.random() * 100) < haveStackProbability ){
+  if( isBonusRegion || (Math.random() * 100) < haveStackProbability ){
     let coinsStack = addCoinsStack();
     coinArray = coinArray.concat( coinsStack.up );
     coinArray = coinArray.concat( coinsStack.down );
@@ -148,7 +165,7 @@ function getCoinFuelOnProbability(isPath){
   }
   return img;
 }
-
+let bonusRegionCount = bonusRegionLength;
 // generate an element on the basis of probability
 // condition if bonus region max stack size.
 // condition if skyLimit or groundLimit reached no stack on that side.
@@ -158,7 +175,7 @@ function addCoinsStack(){
   let down = [];
 
   if(!(pathPosition < skyLimit)){
-    let stackUp = getRandomInt(stackLimit);
+    let stackUp = (isBonusRegion) ? stackLimit : getRandomInt(stackLimit);
     for(let i = 0; i < stackUp; i++){
       let img = getCoinFuelOnProbability()
       let top = pathPosition - (pathStackDistance*(i+1));
@@ -170,7 +187,7 @@ function addCoinsStack(){
   }
 
   if(!(pathPosition > groundLimit)){
-    let stackDown = getRandomInt(stackLimit);
+    let stackDown = (isBonusRegion) ? stackLimit : getRandomInt(stackLimit);
     for(let i = 0; i < stackDown; i++){
       let img = getCoinFuelOnProbability()
       let top = pathPosition + (pathStackDistance*(i+1));
@@ -377,8 +394,15 @@ const calculateScore = function (ele){
 };
 
 const magnetCaptured = function(){
+  let position = plane.position();
   game.find('.coin, .coins, .fuels, .fuel, .magnet').stop().each(function(i, ele){
-    animateTowardsPlane(ele);
+
+    $(ele).animate({
+      top: position.top,
+      left: position.left
+    }, 400, 'linear', function(){
+      animateTowardsPlane(this);
+    });
   });
 }
 
