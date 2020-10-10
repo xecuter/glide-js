@@ -19,13 +19,17 @@ body {
 
 }
 #game{
-  height: 800px;
+  height: 600px;
   width: 640px;
   position: absolute;
 }
 #screen{
-  height: 400px;
-  width: 640px;
+  width: 100vw;
+  height: 100vh;
+  max-width: 640px;
+  max-height: 600px;
+  /*height: 400px;
+  width: 640px;*/
   border: 1px solid gray;
   margin: auto;
   background-color: white;
@@ -36,7 +40,7 @@ body {
   display: none;
 }
 #sky{
-  height: 800px;
+  height: 600px;
   width: 100%;
   background: url("../img/sky_sun2.png") no-repeat center;
   background-size: 100% 130%;
