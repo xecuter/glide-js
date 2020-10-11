@@ -236,14 +236,14 @@ function showNewGamePopup() {
 const planeGoUpDownLimit = 5;
 // minus means plane is going up;
 let planeDirection = 0;
-let incrementalInterval = 1;
+let incrementalInterval = 0;
 let incrementalIntervalCount = 0;
 const planeFlight = function(){
   let top = parseInt(plane.css('top'), 10);
   if( fuel > 0 && isUpKeyDown ){
     fuel -= fuelUpBurnRate;
     if (planeDirection !== -(planeGoUpDownLimit)){
-      if(++incrementalIntervalCount === incrementalInterval){
+      if(incrementalIntervalCount++ === incrementalInterval){
         planeDirection-=planeRotationFactor;
         incrementalIntervalCount = 0;
       }
@@ -255,7 +255,7 @@ const planeFlight = function(){
       if(planeDirection !== 0){planeDirection-=planeRotationFactor}
     } else {
       if (planeDirection !== planeGoUpDownLimit) {
-        if (++incrementalIntervalCount === incrementalInterval) {
+        if (incrementalIntervalCount++ === incrementalInterval) {
           planeDirection += planeRotationFactor;
           incrementalIntervalCount = 0;
         }
